@@ -1,3 +1,4 @@
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 # Quantum Transport Clustering
 
 The package `quantum_transport_clustering` contains three major class objects:
