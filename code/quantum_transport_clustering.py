@@ -372,7 +372,7 @@ class QuantumTransportClustering:
     
     Attributes:
     
-        - Omg_, the Omega matrix whose columns are class labels associated with initialization nodes
+        - Omega_, the Omega matrix whose columns are class labels associated with initialization nodes
     
         - labels_, the predicted class labels using direct extraction or "Espresso()" method
     
@@ -822,16 +822,7 @@ def main():
             plt.title("QT Clustering")
             plt.show()
             
-            data_.clear()
-            
-            
-            
-            
-            
-            
-            
-                     
-        
+            data_.clear()        
         else:
             print(">> Unknown command")
             
