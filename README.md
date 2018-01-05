@@ -20,7 +20,7 @@ shot = qtc.QuantumTransportClustering(n_clusters=3, Hamiltonian=Lap_)
 ## Graph Methods
 
 ```python
-quantum_transport_clustering.GraphMethods(data_, graph_embedded=True, edt_tau = None, eps_quant = None, normed=True, compute_lap = True)
+quantum_transport_clustering.GraphMethods(data_, graph_embedded=True, edt_tau=None, eps_quant=None, normed=True, compute_lap=True)
 ```
 
 The Class `GraphMethods` is able to
@@ -31,7 +31,7 @@ The Class `GraphMethods` is able to
 
 | Parameters       |                                          |
 | ---------------- | :--------------------------------------- |
-| `data_`          | If `graph_embedded = True`, `data_` is a numpy array of shape (`n_feature`, `m_sample`), or  `m_sample` points in `\mathbb R^{n_\text{feature}}`. If `graph_embedded = False`, `data_` is a numpy array of shape ( `m_sample`, `m_sample`) representing the adjacency of a graph with  `m_sample` nodes. |
+| `data_`          | If `graph_embedded = True`, `data_` is a numpy array of shape (`n_feature`, `m_sample`), or  `m_sample` points in **R**^n^. If `graph_embedded = False`, `data_` is a numpy array of shape ( `m_sample`, `m_sample`) representing the adjacency of a graph with  `m_sample` nodes. |
 | `graph_embedded` | `bool`, optional. If `True`, assume the graph is embedded in a Euclidean space. If `False` , assume the input data set is an adjacency matrix not *a priori* embedded in a Euclidean space. |
 | `edt_tau`        | `int`, `edt_tau > 0`, optional. If specified, it is the number of iterations of effective dissimilarity transformation (EDT). Neglected if `graph_embedded = False`. |
 | `eps_quant`      | `float`, in range `0<eps_quant<100`, optional. The the quantile of distance distribution. If not specified, `eps_equant = 1`. Neglected if `graph_embedded = False`. |
@@ -89,7 +89,7 @@ spec_labels_ = spec.labels_
 quantum_transport_clustering.QuantumTransportClustering(n_clusters, Hamiltonian, s=1.0, isExact=True, n_eigs = None)
 ```
 
-Perform quantum transport clustering on undirected graph Laplacians.
+Perform quantum transport clustering on undirected graph Laplacians. Requires `numpy >= 1.13`.
 
 | Parameters    |                                          |
 | ------------- | ---------------------------------------- |
@@ -101,24 +101,25 @@ Perform quantum transport clustering on undirected graph Laplacians.
 
 | Methods      |                                          |
 | ------------ | ---------------------------------------- |
-| `Grind()`    | `Grind(s=None, grind='medium', method_='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `custom`. Option `method` can be `diff` or `kmeans` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produce the array `Omg_`  is the matrix `Omega` which contains the raw class labels. |
+| `Grind()`    | `Grind(s=None, grind='medium', method_='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `custom`. Option `method` can be `diff` or `kmeans` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produces the array `Omega_`  or the `Omega`-matrix which contains the raw class labels. |
 | `Espresso()` | Perform "direct extraction method" on `Omega`. This method creates attribute `labels_` as the predicted class labels. |
 | `Coldbrew()` | Compute "consensus matrix" `C` based on `Omega`. This method creates attribute `consensus_matrix_`. |
 
 | Returns             |                                          |
 | ------------------- | ---------------------------------------- |
-| `Omg_`              | An integer-valued numpy array of shape (`m_sample`, `m_initialization`). The raw class labels of `m_samples` from quantum transport from `m_initialization` nodes. |
+| `Omega_`            | An integer-valued numpy array of shape (`m_sample`, `m_initialization`). The raw class labels of `m_samples` from quantum transport from `m_initialization` nodes. |
 | `labels_`           | An integer-valued numpy array of shape (`m_sample`). The final prediction by `Espresso()`. |
 | `consensus_matrix_` | A float-valued numpy array of shape (`m_sample`, `m_sample`). The consensus matrix computed by `Coldbrew()`. |
 
 Example:
 
 ```python
-shot = qtc.QuantumTransportClustering(n_clusters=3, Hamiltonian=Lap_)
-shot.Grind()
-shot.Espresso()
+shot = qtc.QuantumTransportClustering(n_clusters=3, Hamiltonian=Lap_) # initialization
+Omg_ = shot.Grind() # generate raw class label
+# One may extract the eigevalues by attribute shot.Heigval
+shot.Espresso() # direct extraction method
 class_labels_ = shot.labels_
-shot.Coldbrew()
+shot.Coldbrew() # generate consensus matrix
 C_matrix_ = shot.consensus_matrix_
 ```
 
