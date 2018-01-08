@@ -16,6 +16,7 @@ and the Grainger Engineering Breakthroughs Initiative.
 """
 
 import numpy as np
+import scipy as sp
 from scipy.sparse.csgraph import laplacian as sp_lap
 from sklearn.cluster import KMeans
 import math
