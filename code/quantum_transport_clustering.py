@@ -198,7 +198,7 @@ class GraphMethods:
         else: 
             # not embedded in Euclidean space, then data is network adjacency
             if data_.shape[0] == data_.shape[1]:
-                if np.any(Adj_ < 0):
+                if np.any(data_ < 0):
                     raise ValueError('Entries of adjacency matrix should be non-negative.')
                 self.Adj_ = (data_ + data_.T)/2
             else:
@@ -231,7 +231,7 @@ class GraphMethods:
         X_ = self.Data_
         D_ = euc_dist_mat_(X_)
         if self.edt_tau > 0:
-            for t in range(int(edt_tau)):
+            for t in range(int(self.edt_tau)):
                 D_ = cos_dist_mat_(D_)
         self.Dist_ = D_
     
