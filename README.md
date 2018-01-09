@@ -1,6 +1,6 @@
 # Quantum Transport Clustering
 
-The package `quantum_transport_clustering` contains three major class objects:
+The package `quantum_transport_clustering` (written in `python-3.6`) contains three major class objects:
 
 - `GraphMethods`: construct undirected graphs, and compute and encapsulate their graph Laplacians
 - `SpectralClustering`: perform correct spectral clustering on undirected graph Laplacians
@@ -101,7 +101,7 @@ Perform quantum transport clustering on undirected graph Laplacians. Requires `n
 
 | Methods      |                                          |
 | ------------ | ---------------------------------------- |
-| `Grind()`    | `Grind(s=None, grind='medium', method_='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `custom`. Option `method` can be `diff` or `kmeans` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produces the array `Omega_`  or the `Omega`-matrix which contains the raw class labels. |
+| `Grind()`    | `Grind(s=None, grind='medium', method_='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `"custom"`. Option `method` can be `"diff"` or `"kmeans"` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produces the array `Omega_`  or the `Omega`-matrix which contains the raw class labels. |
 | `Espresso()` | Perform "direct extraction method" on `Omega`. This method creates attribute `labels_` as the predicted class labels. |
 | `Coldbrew()` | Compute "consensus matrix" `C` based on `Omega`. This method creates attribute `consensus_matrix_`. |
 
