@@ -270,7 +270,7 @@ class SpectralClustering:
             If None, spectral embedding is not normalized;
             If "row," spectral embedding is normalized each row (each row represent a node);
             If "deg," spectral embedding is normalized by degree vector.
-        - isExact: bool. Default is True.
+        - is_exact: bool. Default is True.
             If True, exact eigenvectors and eigenvalues will be computed.
             If False, first n_cluster low energy eigenvectors and eigenvalues (small eigenvalues) will be computed
     
@@ -294,9 +294,9 @@ class SpectralClustering:
     
     """
     
-    def __init__(self, n_clusters, norm_method='row', isExact=True):
+    def __init__(self, n_clusters, norm_method='row', is_exact=True):
         self.nc = n_clusters
-        self.isExact = isExact
+        self.is_exact = is_exact
         if norm_method == None:
             self.norm = 0 # do not normalize
         elif norm_method == 'row':
@@ -315,7 +315,7 @@ class SpectralClustering:
             print('> Degree normalized spectral embedding.')
 
     def compute_eigs(self):
-        if self.isExact:
+        if self.is_exact:
             self.Heigval, self.Heigvec = np.linalg.eigh(self.H_)
             print('> Exact eigs done')
         else:
@@ -348,11 +348,11 @@ class QuantumTransportClustering:
     Other optional paramters:
         - s = 1.0: used to generate the Laplace transform s-parameter, 
           which is s * (E[n_cluster - 1]/(n_cluster - 1)).
-        - isExact = True: if True, exact eigenvalue and eigenvectors 
+        - is_exact = True: if True, exact eigenvalue and eigenvectors 
           of graph Laplacian will be computed
-        - n_eigs = None: If isExact = False, first n_eigs low energy 
+        - n_eigs = None: If is_exact = False, first n_eigs low energy 
           eigenvectors and eigenvalues will be computed, by default 
-          n_eigs = min(10*n_clusters, number_of_nodes). If isExact 
+          n_eigs = min(10*n_clusters, number_of_nodes). If is_exact 
           = True, but n_eigs is not None, then first n_eigs low energy
           exact eigenstates will be used in QT clustering.
     
@@ -383,7 +383,7 @@ class QuantumTransportClustering:
     
     machine_eps = np.finfo(float).eps
     
-    def __init__(self, n_clusters, Hamiltonian, s=1.0, isExact=True, n_eigs = None):
+    def __init__(self, n_clusters, Hamiltonian, s=1.0, is_exact=True, n_eigs = None):
         
         if Hamiltonian.shape[0] == Hamiltonian.shape[1]:
             self.m_nodes = Hamiltonian.shape[0]
@@ -399,8 +399,8 @@ class QuantumTransportClustering:
         else:
             raise ValueError('Number of clusters is an int and n_clusters > 1.')
     
-        self.isExact = isExact
-        if not isExact:
+        self.is_exact = is_exact
+        if not is_exact:
             self._n_eigs = min(10*n_clusters, self.m_nodes) if n_eigs == None else n_eigs
             print('> First {} low energy eigenvalues will be computed.'.format(self._n_eigs))
     
@@ -418,7 +418,7 @@ class QuantumTransportClustering:
         
 
     def compute_eigs(self):
-        if self.isExact:
+        if self.is_exact:
             self.Heigval, self.Heigvec = np.linalg.eigh(self.H_)
             print('> Exact eigs done')
         else:
@@ -507,7 +507,7 @@ class QuantumTransportClustering:
             class_label_ = km.labels_
         return class_label_
     
-    def Grind(self, s=None, grind='medium', method_='diff', init_nodes_=None):
+    def Grind(self, s=None, grind='medium', method='diff', init_nodes_=None):
         """
         grind option can be "coarse", "medium", "fine", "micro", "custom"
         If grind="custom" one need to specify the a list of nodes as init_nodes_
@@ -542,6 +542,7 @@ class QuantumTransportClustering:
         deg_idx_ = np.argsort(self.Heigvec[:,0]**2)
         
         if _every_ != None:
+            if _every_ == 0: _every_ = 1
             init_nodes_ = deg_idx_[::_every_]
         
         m_init = init_nodes_.size
@@ -565,16 +566,16 @@ class QuantumTransportClustering:
 #                 theta_s_[np.where(psi_s_ < self.machine_eps)] = 0.0
 #                 print('! Small amplitude warning !')
             
-            if method_ == 'diff':
+            if method == 'diff':
                 Omega_[:,jdx] = self.phase_info_clustering_diff_(theta_s_, self.nc)
-            elif method_ == 'kmeans':
+            elif method == 'kmeans':
                 Omega_[:,jdx] = self.phase_info_clustering_KMeans_(theta_s_, self.nc)
             else:
-                raise ValueError('> method_ can only be {diff, or kmeans}.')
+                raise ValueError('> method can only be {diff, or kmeans}.')
 
         self.Omega_ = Omega_
         if show_warning:
-            print('>> Warning: some amplitudes are below machine eps.')
+            print('>> Warning: some amplitudes are below machine eps. QTC may show numerical instability.')
         return Omega_
     
     def is_equiv(self, Omg_cols_):
@@ -699,8 +700,8 @@ def main():
             if dataset_key in graphs_:
                 n_cluster = int(input("Please specify the number of clusters ").strip())
                 lap_ = graphs_[dataset_key].Lap_
-                qtc = QuantumTransportClustering(n_cluster, lap_, s=1, isExact=False, n_eigs=min(10*n_cluster, lap_.shape[0]))
-                Omega_ = qtc.Grind(grind='fine', method_='diff')
+                qtc = QuantumTransportClustering(n_cluster, lap_, s=1, is_exact=False, n_eigs=min(10*n_cluster, lap_.shape[0]))
+                Omega_ = qtc.Grind(grind='fine', method='diff')
                 qtc.Espresso()
                 qtc_clf[dataset_key] = qtc
             else:

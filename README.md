@@ -54,7 +54,7 @@ laplacian_matrix_ = graph_.Lap_
 ## Spectral Clustering
 
 ```python
-quantum_transport_clustering.SpectralClustering(n_clusters, norm_method='row', isExact=True)
+quantum_transport_clustering.SpectralClustering(n_clusters, norm_method='row', is_exact=True)
 ```
 Perform correct spectral clustering on undirected graph Laplacians.
 
@@ -63,7 +63,7 @@ Perform correct spectral clustering on undirected graph Laplacians.
 | ------------- | ---------------------------------------- |
 | `n_clusters`  | `int`, `n_clusters > 0` , the number of clusters. |
 | `norm_method` | `None`, `"row"`, or `"deg"`. If `None`, the spectral embedding is not normalized. If `"row"`, the spectral embedding is L^2^-normalized by row where each row represent a node. If `"deg"`, the spectral embedding is normalized by degree vector. |
-| `isExact`     | `bool`. If `True`, exact eigenvalues and eigenvectors will be computed. If `False`, first  (small) `n_clusters` eigenvalues and eigenvectors will be computed. |
+| `is_exact`    | `bool`. If `True`, exact eigenvalues and eigenvectors will be computed. If `False`, first  (small) `n_clusters` eigenvalues and eigenvectors will be computed. |
 
 | Methods     |                                          |
 | ----------- | ---------------------------------------- |
@@ -86,7 +86,7 @@ spec_labels_ = spec.labels_
 ## Quantum Transport Clustering
 
 ```python
-quantum_transport_clustering.QuantumTransportClustering(n_clusters, Hamiltonian, s=1.0, isExact=True, n_eigs = None)
+quantum_transport_clustering.QuantumTransportClustering(n_clusters, Hamiltonian, s=1.0, is_exact=True, n_eigs=None)
 ```
 
 Perform quantum transport clustering on undirected graph Laplacians. Requires `numpy >= 1.13`.
@@ -96,12 +96,12 @@ Perform quantum transport clustering on undirected graph Laplacians. Requires `n
 | `n_clusters`  | `int` , `n_clusters > 0` , the number of clusters. |
 | `Hamiltonian` | numpy array of shape (`m_sample`, `m_sample`). The symmetric graph Laplacian matrix `H`. |
 | `s`           | `float`, `s>0` , optional. The actual `s`-parameter of Laplace transform will be `s_actual = s * (E[n_clusters - 1] - E[0]) / (n_clusters - 1)`, where `E[n]` are eigenvalues of `H`. |
-| `isExact`     | `bool`, optional. If `True`, exact eigenvalues and eigenvectors of `H` will be computed. If `False`, first `n_eigs` low energy states will be computed approximated. |
-| `n_eigs`      | `int`, `n_eigs > 0`, optional. If `n_eigs` not specified and `isExact = False`, `n_eigs = 10 * n_clusters`. If `n_eigs` is specified and `isExact = True`, then first `n_eigs` low exact energy state will be used to perform quantum transport clustering. The latter case can be used to speed up the clustering processes. |
+| `is_exact`    | `bool`, optional. If `True`, exact eigenvalues and eigenvectors of `H` will be computed. If `False`, first `n_eigs` low energy states will be computed approximated. |
+| `n_eigs`      | `int`, `n_eigs > 0`, optional. If `n_eigs` not specified and `is_exact = False`, `n_eigs = 10 * n_clusters`. If `n_eigs` is specified and `is_exact = True`, then first `n_eigs` low exact energy state will be used to perform quantum transport clustering. The latter case can be used to speed up the clustering processes. |
 
 | Methods      |                                          |
 | ------------ | ---------------------------------------- |
-| `Grind()`    | `Grind(s=None, grind='medium', method_='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `"custom"`. Option `method` can be `"diff"` or `"kmeans"` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produces the array `Omega_`  or the `Omega`-matrix which contains the raw class labels. |
+| `Grind()`    | `Grind(s=None, grind='medium', method='diff', init_nodes_=None)`  Option `grind` can be `"coarse"`, `"medium"`, `"fine"`, `"micro"`, or `"custom"`. Option `method` can be `"diff"` or `"kmeans"` corresponding to direct difference and k-means methods. If `grind="custom"`, then `init_nodes_`  is the custom python `list` of initialization nodes. Method `Grind()` produces the array `Omega_`  or the `Omega`-matrix which contains the raw class labels. |
 | `Espresso()` | Perform "direct extraction method" on `Omega`. This method creates attribute `labels_` as the predicted class labels. |
 | `Coldbrew()` | Compute "consensus matrix" `C` based on `Omega`. This method creates attribute `consensus_matrix_`. |
 
@@ -123,3 +123,4 @@ shot.Coldbrew() # generate consensus matrix
 C_matrix_ = shot.consensus_matrix_
 ```
 
+More in-depth discussions about the spectral clustering and QTC algorithms, including the interpretations of the parameters and variables, can be found at [Quantum Transport Senses Community Structure in Networks](https://arxiv.org/abs/1711.04979).
